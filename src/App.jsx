@@ -8,22 +8,25 @@ function App() {
   // const [weight, setWeight] = useState("");
   // const [number, setNumber] = useState(1);
 
-  // let url = `https://pokeapi.co/api/v2/pokemon/${number}`;
-  let url = `https://pokeapi.co/api/v2/pokemon`;
-
   useEffect(() => {
     // if (!number) return;
-    getPokemon();
-  }, [url]);
+    loadPokemonData();
+  }, []);
 
-  async function getPokemon() {
+  async function loadPokemonData() {
+    const pokemonUrls = [];
+
+    // Step 1: Create URLs for Pokémon 1 to 20
+    for (let i = 1; i <= 20; i++) {
+      pokemonUrls.push(`https://pokeapi.co/api/v2/pokemon/${i}`);
+    }
+
     try {
-      const data = await axios.get(url).then((response) => {
-        return response.data;
-      });
+      const responses = await Promise.all(pokemonUrls.map((url) => fetch(url)));
+      const pokemonData = await Promise.all(responses.map((res) => res.json()));
 
-      console.log(data.results);
-      setPokemons(data.results);
+      console.log(pokemonData);
+      setPokemons(pokemonData);
       // setName(data.name);
       // setWeight(data.weight);
       // setWeight(data.weight);
@@ -33,7 +36,7 @@ function App() {
   }
 
   return (
-    <main className="bg-gray-950 h-dvh text-white ">
+    <main className="bg-gray-950 h-full text-white comic-neue-regular">
       <Game pokemons={pokemons} />
       {/* <div>
         <h1>MEMORY CARD GAME</h1>
