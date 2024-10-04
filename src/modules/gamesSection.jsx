@@ -2,7 +2,16 @@ import Header from "./header";
 import PokemonCard from "./pokemon-card";
 import { BestScore, Score } from "./score-card";
 
-const Game = ({ pokemons, bestScore, setBestScore, score, setScore }) => {
+const Game = ({
+  pokemons,
+  bestScore,
+  setBestScore,
+  score,
+  setScore,
+  setPokemons,
+  isGameover,
+  setIsGameOver,
+}) => {
   return (
     <div
       id="game"
@@ -25,6 +34,10 @@ const Game = ({ pokemons, bestScore, setBestScore, score, setScore }) => {
                   score={score}
                   setScore={setScore}
                   setBestScore={setBestScore}
+                  pokemons={pokemons}
+                  setPokemons={setPokemons}
+                  isGameover={isGameover}
+                  setIsGameOver={setIsGameOver}
                 />
               ))
             ) : (

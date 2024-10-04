@@ -1,6 +1,17 @@
 import { useRef, useState } from "react";
+import { shuffleArray } from "./utility";
 
-const PokemonCard = ({ pokemon, bestScore, score, setBestScore, setScore }) => {
+const PokemonCard = ({
+  pokemon,
+  bestScore,
+  score,
+  setBestScore,
+  setScore,
+  pokemons,
+  setPokemons,
+  isGameover,
+  setIsGameOver,
+}) => {
   const [isClicked, setIsClicked] = useState(false);
 
   const ref = useRef(null);
@@ -9,20 +20,48 @@ const PokemonCard = ({ pokemon, bestScore, score, setBestScore, setScore }) => {
     setScore(newScore);
     setIsClicked(true);
   }
-  const handleClick = () => {
+
+  function removeShuffleFromAllCards() {
+    let cards = document.querySelectorAll(".cards");
+    cards.forEach((card) => {
+      //wait for 200ms
+
+      card.classList.remove("shuffle");
+    });
+  }
+
+  function addShuffleToAllCards() {
+    let cards = document.querySelectorAll(".cards");
+    cards.forEach((card) => {
+      //wait for 200ms
+
+      card.classList.add("shuffle");
+    });
+  }
+
+  const handleClick = async () => {
     if (isClicked) {
-      console.log("game over");
       if (score > bestScore) {
         localStorage.setItem("bestScore", score);
         setBestScore(score);
-        setScore(0);
       }
+      setIsGameOver(true);
+      //reload window
+      // window.location.reload();
       return;
     }
     // add rotate-y to the class this ref
     ref.current.classList.add("rotate-y");
 
     updateCard(score + 1);
+    //wait for 3ms with promise
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    ref.current.classList.remove("rotate-y");
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    addShuffleToAllCards();
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    removeShuffleFromAllCards();
+    setPokemons(() => shuffleArray(pokemons));
   };
 
   return (

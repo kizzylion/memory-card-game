@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import logo from "./assets/logo.png";
 import Game from "./modules/gamesSection";
+import { shuffleArray } from "./modules/utility";
+import SplashScreen from "./modules/splash";
 
 let didInit = false;
+
 function App() {
-  const [pokemons, setPokemons] = useState("");
+  const [pokemons, setPokemons] = useState([]);
   const [bestScore, setBestScore] = useState(0);
   const [score, setScore] = useState(0);
-  // const [name, setName] = useState("");
-  // const [weight, setWeight] = useState("");
-  // const [number, setNumber] = useState(1);
+  const [splashScreen, setSplashScreen] = useState(true);
+  const [isGameover, setIsGameOver] = useState(false);
 
   useEffect(() => {
     if (!didInit) {
@@ -43,54 +46,60 @@ function App() {
       const pokemonData = await Promise.all(responses.map((res) => res.json()));
 
       console.log(pokemonData);
-      setPokemons(pokemonData);
-      // setName(data.name);
-      // setWeight(data.weight);
-      // setWeight(data.weight);
+      setPokemons(shuffleArray(pokemonData));
+      shuffleArray(pokemonData);
     } catch (error) {
       alert(error);
     }
   }
 
+  function onRestart() {
+    setIsGameOver(false);
+    setScore(0);
+    setPokemons(shuffleArray(pokemons));
+    loadBestScoreFromLocalStorage();
+    loadPokemonData();
+  }
+
   return (
     <main className="bg-gray-950 h-full text-white comic-neue-regular">
-      <Game
-        pokemons={pokemons}
-        bestScore={bestScore}
-        setBestScore={setBestScore}
-        score={score}
-        setScore={setScore}
-      />
-      {/* <div>
-        <h1>MEMORY CARD GAME</h1>
-        <input
-          type="number"
-          value={number}
-          onChange={(e) => {
-            setNumber(e.target.value);
-          }}
+      {splashScreen && <SplashScreen setSplashScreen={setSplashScreen} />}
+      {!splashScreen && (
+        <Game
+          pokemons={pokemons}
+          bestScore={bestScore}
+          setBestScore={setBestScore}
+          score={score}
+          setScore={setScore}
+          setPokemons={setPokemons}
+          isGameover={isGameover}
+          setIsGameOver={setIsGameOver}
         />
-        <button onClick={getPokemon}>Get Pokemon</button>
-        <h2>Name: {name}</h2>
-        <h4>Weigh: {weight} kg</h4>
-        <img
-          src={
-            pokemon ? (
-              pokemon.sprites.other.dream_world.front_default
-            ) : (
-              <p>Loading... </p>
-            )
-          }
-        />
-        <p>My Abilities are:</p>
-        {pokemon ? (
-          pokemon.abilities.map((value, key) => {
-            return <p key={key}>{value.ability.name}</p>;
-          })
-        ) : (
-          <p>Loading...</p>
-        )}
-      </div> */}
+      )}
+      {isGameover && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-amber-900 p-6 rounded-lg shadow-lg  w-96 text-center border-[1.15rem]  border-amber-300 rounded-t-[5.5rem] rounded-b-[8rem] ">
+            <div>
+              <img src={logo} alt="" className="h-20 md:h-24 mx-auto mb-5" />
+            </div>
+            <h2 className="pokemon-solid text-3xl font-bold mb-4 text-amber-500 comic-neue-bold">
+              Game Over!
+            </h2>
+            <p className="comic-neue-bold text-lg mb-2 text-amber-300">
+              Your Score: {score}
+            </p>
+            <p className="comic-neue-bold text-lg mb-6 text-amber-500">
+              Best Score: {bestScore}
+            </p>
+            <button
+              className="comic-neue-bold bg-amber-500 text-amber-950 px-4 py-2 rounded-lg  hover:bg-amber-600 transition shadow-xl"
+              onClick={onRestart}
+            >
+              Restart Game
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
