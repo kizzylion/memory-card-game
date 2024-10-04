@@ -2,16 +2,33 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Game from "./modules/gamesSection";
 
+let didInit = false;
 function App() {
   const [pokemons, setPokemons] = useState("");
+  const [bestScore, setBestScore] = useState(0);
+  const [score, setScore] = useState(0);
   // const [name, setName] = useState("");
   // const [weight, setWeight] = useState("");
   // const [number, setNumber] = useState(1);
 
   useEffect(() => {
-    // if (!number) return;
+    if (!didInit) {
+      didInit = true;
+      loadBestScoreFromLocalStorage();
+      loadPokemonData();
+    }
     loadPokemonData();
   }, []);
+
+  function loadBestScoreFromLocalStorage() {
+    const bestScore = localStorage.getItem("bestScore");
+    if (bestScore) {
+      setBestScore(bestScore);
+    } else {
+      localStorage.setItem("bestScore", 0);
+      setBestScore(0);
+    }
+  }
 
   async function loadPokemonData() {
     const pokemonUrls = [];
@@ -37,7 +54,13 @@ function App() {
 
   return (
     <main className="bg-gray-950 h-full text-white comic-neue-regular">
-      <Game pokemons={pokemons} />
+      <Game
+        pokemons={pokemons}
+        bestScore={bestScore}
+        setBestScore={setBestScore}
+        score={score}
+        setScore={setScore}
+      />
       {/* <div>
         <h1>MEMORY CARD GAME</h1>
         <input
