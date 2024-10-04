@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import logo from "./assets/logo.png";
 import Game from "./modules/gamesSection";
 import { shuffleArray } from "./modules/utility";
 import SplashScreen from "./modules/splash";
 import { Analytics } from "@vercel/analytics/react"; // import trackEvent
 import { track } from "@vercel/analytics";
+import { motion } from "framer-motion";
 
 let didInit = false;
 

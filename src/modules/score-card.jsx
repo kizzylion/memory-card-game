@@ -1,6 +1,40 @@
+import { motion, useAnimation } from "framer-motion";
+import { useEffect } from "react";
+
 const BestScore = ({ bestScore }) => {
+  const controls = useAnimation();
+
+  useEffect(() => {
+    // Start the initial scale and rotate animation
+    controls.start({
+      opacity: 1,
+      x: 1,
+      transition: { duration: 2, ease: "easeInOut" },
+    });
+  }, [controls]);
+
+  const handleAnimationComplete = () => {
+    // Start the bouncing animation once the scale and rotate complete
+    controls.start({
+      y: [0, -4, 0],
+      z: [0, 1],
+      transition: {
+        duration: 2,
+        ease: "easeInOut",
+        repeat: Infinity,
+        repeatType: "loop",
+      },
+    });
+  };
+
   return (
-    <div className="absolute right-5 md:right-8 lg:right-20 -top-10  md:-top-14 score-card flex items-center gap-2  justify-end  w-fit h-fit bg-gray-800/60 px-4 rounded-tl-3xl  rounded-bl-full ">
+    <motion.div
+      initial={{ opacity: 0, x: "100vw" }} // Start off-screen to the left
+      animate={controls}
+      onAnimationComplete={handleAnimationComplete}
+      transition={{ type: "spring", stiffness: 70, duration: 2 }} // Adjust the smoothness of the animation
+      className="absolute right-5 md:right-8 lg:right-20 -top-10  md:-top-14 score-card flex items-center gap-2  justify-end  w-fit h-fit bg-gray-800/60 px-4 rounded-tl-3xl  rounded-bl-full "
+    >
       <p className="pokemon-solid flex h-fit items-center gap-2 py-1 md:py-0 leading-tight text-base ">
         Best{" "}
         <span className="pokemon-solid text-amber-300 text-3xl md:text-4xl leading-[50%]">
@@ -175,19 +209,24 @@ const BestScore = ({ bestScore }) => {
           </linearGradient>
         </defs>
       </svg>
-    </div>
+    </motion.div>
   );
 };
 const Score = ({ score }) => {
   return (
-    <div className="absolute left-5 md:left-8 lg:left-20 -top-0 score-card flex items-center gap-2  justify-end  w-fit h-fit bg-blue-800/60 pl-4 pr-8  rounded-br-3xl rounded-tr-xl ">
+    <motion.div
+      initial={{ opacity: 0, x: "-100vw" }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+      className="absolute left-5 md:left-8 lg:left-20 -top-0 score-card flex items-center gap-2  justify-end  w-fit h-fit bg-blue-800/60 pl-4 pr-8  rounded-br-3xl rounded-tr-xl "
+    >
       <p className="pokemon-solid  items-center gap-2 leading-none text-sm ">
         Score
       </p>
       <p className="pokemon-solid text-white text-3xl md:text-4xl leading-[70%] md:leading-[70%] ">
         {score}
       </p>
-    </div>
+    </motion.div>
   );
 };
 
