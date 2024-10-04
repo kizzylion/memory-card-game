@@ -4,7 +4,8 @@ import logo from "./assets/logo.png";
 import Game from "./modules/gamesSection";
 import { shuffleArray } from "./modules/utility";
 import SplashScreen from "./modules/splash";
-import { Analytics, trackEvent } from "@vercel/analytics/react"; // import trackEvent
+import { Analytics } from "@vercel/analytics/react"; // import trackEvent
+import { track } from "@vercel/analytics";
 
 let didInit = false;
 
@@ -63,7 +64,7 @@ function App() {
     loadPokemonData();
 
     // Track restart event
-    trackEvent("Game Restarted", { bestScore, score });
+    track("Game Restarted", { bestScore, score });
   }
 
   return (
@@ -74,7 +75,7 @@ function App() {
             setSplashScreen(showSplash);
             if (!showSplash) {
               // Track start game event
-              trackEvent("Game Started", { bestScore });
+              track("Game Started", { bestScore });
             }
           }}
         />
