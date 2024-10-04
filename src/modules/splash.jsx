@@ -31,7 +31,7 @@ const SplashScreen = ({ setSplashScreen }) => {
         <button
           type="button"
           onClick={() => setSplashScreen(false)}
-          className="comic-neue-bold bg-white hover:bg-gray-100 text-blue-900 font-bold text-base md:text-lg  px-7 py-2 rounded-full shadow-md drop-shadow-md shadow-gray-900 "
+          className="comic-neue-bold bg-white hover:bg-gray-100 hover:scale-110 text-blue-900 font-bold text-base md:text-lg  px-7 py-2 rounded-full shadow-md drop-shadow-md shadow-gray-900 "
         >
           Start Game
         </button>

@@ -80,7 +80,7 @@ const PokemonCard = ({
             draggable="false"
             decoding="async"
             disabled
-            src="src/assets/card-background.png"
+            src="./src/assets/card-background.png"
             className=" z-10   mx-auto object-cover  mix-blend-multiply"
           />
         </div>
