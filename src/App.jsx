@@ -4,6 +4,7 @@ import logo from "./assets/logo.png";
 import Game from "./modules/gamesSection";
 import { shuffleArray } from "./modules/utility";
 import SplashScreen from "./modules/splash";
+import { Analytics, trackEvent } from "@vercel/analytics/react"; // import trackEvent
 
 let didInit = false;
 
@@ -19,6 +20,7 @@ function App() {
       didInit = true;
       loadBestScoreFromLocalStorage();
       loadPokemonData();
+      <Analytics />;
     }
     loadPokemonData();
   }, []);
@@ -59,11 +61,24 @@ function App() {
     setPokemons(shuffleArray(pokemons));
     loadBestScoreFromLocalStorage();
     loadPokemonData();
+
+    // Track restart event
+    trackEvent("Game Restarted", { bestScore, score });
   }
 
   return (
     <main className="bg-gray-950 h-full text-white comic-neue-regular">
-      {splashScreen && <SplashScreen setSplashScreen={setSplashScreen} />}
+      {splashScreen && (
+        <SplashScreen
+          setSplashScreen={(showSplash) => {
+            setSplashScreen(showSplash);
+            if (!showSplash) {
+              // Track start game event
+              trackEvent("Game Started", { bestScore });
+            }
+          }}
+        />
+      )}
       {!splashScreen && (
         <Game
           pokemons={pokemons}
