@@ -21,7 +21,6 @@ function App() {
       didInit = true;
       loadBestScoreFromLocalStorage();
       loadPokemonData();
-      <Analytics />;
     }
     loadPokemonData();
   }, []);
@@ -69,6 +68,9 @@ function App() {
 
   return (
     <main className="bg-gray-950 h-full text-white comic-neue-regular">
+      {/* Vercel Analytics */}
+      <Analytics />
+
       {splashScreen && (
         <SplashScreen
           setSplashScreen={(showSplash) => {
